@@ -35,6 +35,6 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
 
 CMD ["node", "server.js"]
 
-LABEL org.opencontainers.image.title="AGY Command Center Dashboard"
+LABEL org.opencontainers.image.title="Orrery (AGY Command Center Dashboard Pod)"
 LABEL org.opencontainers.image.description="Generative, plugin-based system visualization core for AGY Command Center"
 LABEL org.opencontainers.image.version="1.0.0"

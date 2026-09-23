@@ -35,12 +35,12 @@ podman run --rm --userns=keep-id -v "$PWD/dashboard:/app:Z" -w /app -e HOME=/tmp
   bash -lc "npm run typecheck && npm test && npm run lint && npm run build"
 
 # image
-podman build -t agy-dashboard:latest ./dashboard
+podman build -t orrery-dashboard:latest ./dashboard
 
 # run
-podman run -d --name agy-dashboard -p 3000:3000 \
+podman run -d --name orrery-dashboard -p 3000:3000 \
   [-e VLLM_API_URL=http://host.containers.internal:8931 -e VLLM_MODEL=llama-3-8b-instruct] \
-  agy-dashboard:latest
+  orrery-dashboard:latest
 ```
 
 `--userns=keep-id` + `:Z` keep files host-owned (uid 1000) and SELinux-safe.

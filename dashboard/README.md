@@ -1,4 +1,4 @@
-# AGY Command Center Dashboard Pod
+# Orrery (AGY Command Center Dashboard Pod)
 
 The **plug-in hub** of the AGY Command Center: a headless, 100% API-driven
 Next.js client with a **generative interface engine**. Every external system
@@ -71,13 +71,13 @@ See `.env.example`. Key plug-ins:
 
 ```bash
 # build (requires package-lock.json — committed)
-podman build -t agy-dashboard:latest .
+podman build -t orrery-dashboard:latest .
 
 # run
-podman run -d --name agy-dashboard -p 3000:3000 \
+podman run -d --name orrery-dashboard -p 3000:3000 \
   -e VLLM_API_URL=http://<your-vllm-host>:8000 \
   -e VLLM_MODEL=<served-model-id> \
-  agy-dashboard:latest
+  orrery-dashboard:latest
 ```
 
 Note: rootless podman forwards on IPv4 — browse `http://127.0.0.1:3000`.
