@@ -1,0 +1,40 @@
+# AGY Command Center Dashboard Pod
+# Multi-stage build -> slim standalone runtime (Next.js output:standalone)
+
+# Stage 1: dependencies
+FROM node:20-bookworm AS deps
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# Stage 2: build
+FROM node:20-bookworm AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN npm run build
+
+# Stage 3: standalone runtime
+FROM node:20-bookworm AS production
+WORKDIR /app
+ENV NODE_ENV=production \
+    PORT=3000 \
+    HOSTNAME=0.0.0.0 \
+    NEXT_TELEMETRY_DISABLED=1
+
+# Non-root user (uid 1000 exists in node images as 'node')
+COPY --from=builder --chown=node:node /app/public ./public
+COPY --from=builder --chown=node:node /app/.next/standalone ./
+COPY --from=builder --chown=node:node /app/.next/static ./.next/static
+USER node
+EXPOSE 3000
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD ["node", "-e", "require('http').get('http://127.0.0.1:3000/api/health', r => process.exit(r.statusCode < 300 ? 0 : 1)).on('error', () => process.exit(1))"]
+
+CMD ["node", "server.js"]
+
+LABEL org.opencontainers.image.title="AGY Command Center Dashboard"
+LABEL org.opencontainers.image.description="Generative, plugin-based system visualization core for AGY Command Center"
+LABEL org.opencontainers.image.version="1.0.0"
