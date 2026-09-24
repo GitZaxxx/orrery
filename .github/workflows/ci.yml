@@ -32,7 +32,7 @@ jobs:
         run: npm run build
       - name: Build container image
         run: |
-          docker build -t orrery-dashboard:ci ./dashboard
+          docker build -f ./dashboard/Containerfile -t orrery-dashboard:ci ./dashboard
       - name: Start container
         run: |
           docker run -d --name orrery-dashboard -p 3000:3000 orrery-dashboard:ci
